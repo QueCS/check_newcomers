@@ -1,6 +1,7 @@
 import requests
 import logging
 import sys
+import re
 
 
 log_dir = '/home/quentin/projects/check_newcomers/logs'
@@ -26,6 +27,10 @@ def return_highscore_api(server, community, category, type):
         return response.text
     logging.critical(f'When calling return_highscore_api, unable to fetch data, status code {response.status_code}')
     sys.exit(1)
+
+def return_timestamp(xml):
+    timestamp = re.search(r'timestamp="(\d+)"', xml)
+    return timestamp
 
 
 if __name__ == '__main__':
