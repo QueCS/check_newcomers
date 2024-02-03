@@ -24,8 +24,12 @@ def is_xml(string):
     try:
         et.fromstring(string)
     except et.ParseError:
-        logging.error(f'When calling is_xml(), "{string[0:50]}" (truncated if above 50 caracters) is not a valid xml')
-        return False
+        if len(string) > 50:
+            logging.error(f'When calling is_xml(), "{string[0:50]} [...]" is not a valid xml')
+            return False
+        else:
+            logging.error(f'When calling is_xml(), "{string}" is not a valid xml')
+            return False
     return True
 
 
@@ -60,7 +64,7 @@ def return_player_coords(player_api_xml):
     if is_xml(player_api_xml):
         return re.findall(r'coords="([^"]+)"', player_api_xml)
     logging.critical('When calling return_player_coords(), no valid xml to parse')
-    sys.exit(1)
+    # sys.exit(1)
 
 
 def return_player_home_planet_coords(player_api_xml):
