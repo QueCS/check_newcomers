@@ -2,7 +2,7 @@ import requests
 import logging
 import sys
 import re
-
+import xml.etree.ElementTree as et
 
 log_dir = '/home/quentin/projects/check_newcomers/logs'
 log_lvl = logging.INFO
@@ -20,6 +20,13 @@ def main():
     ...
 
 
+def is_xml(string):
+    try:
+        et.fromstring(string)
+    except et.ParseError:
+        return False
+    return True
+
 def return_highscore_api(server, community, category, type):
     url = f'https://s{server}-{community}.ogame.gameforge.com/api/highscore.xml?category={category}&type={type}'
     response = requests.get(url, timeout=1, allow_redirects=False)
@@ -36,6 +43,24 @@ def return_player_api(server, community, player_id):
         logging.info(f'Fetched api: {url}')
         return response.text
     logging.critical(f'When calling return_player_api, unable to fetch data, status code {response.status_code}')
+    sys.exit(1)
+
+def return_player_name(player_api_xml):
+    if is_xml(player_api_xml):
+        return re.findall(r'name="([^"]+)"', player_api_xml)[0]
+    logging.critical('When calling return_player_name, no valid xml to parse')
+    sys.exit(1)
+
+def return_player_coords(player_api_xml):
+    if is_xml(player_api_xml):
+        return re.findall(r'coords="([^"]+)"', player_api_xml)
+    logging.critical('When calling return_player_coords, no valid xml to parse')
+    sys.exit(1)
+
+def return_player_home_planet_coords(player_api_xml):
+    if is_xml(player_api_xml):
+        return return_player_coords(player_api_xml)[0]
+    logging.critical('When calling return_player_coords, no valid xml to parse')
     sys.exit(1)
 
 def return_api_timestamp(api_xml):
