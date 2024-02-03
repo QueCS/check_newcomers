@@ -30,6 +30,7 @@ def return_highscore_api(server, community, category, type):
 
 def return_timestamp(xml):
     timestamp = re.search(r'timestamp="(\d+)"', xml)
+    logging.info('Fetched timestamp')
     return timestamp
 
 
