@@ -16,19 +16,19 @@ The config.toml file of appropriate inner format is mandatory for the scripts to
 ## Directory structure
 
 check_newcomers\
-├── data\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── universe_community_players.json\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── universe_community_timestamp.json\
-├── logs\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── check_newcomers.log\
-├── src\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── check_newcomers.py\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── api_parsing.py\
-├── .gitignore\
-├── config_example.toml\
-├── config.toml\
-├── LICENSE.md\
-└── README.md
+├─ data\
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ universe_community_players.json\
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ universe_community_timestamp.json\
+├─ logs\
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ check_newcomers.log\
+├─ src\
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ check_newcomers.py\
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ api_parsing.py\
+├─ .gitignore\
+├─ config_example.toml\
+├─ config.toml\
+├─ LICENSE.md\
+└─ README.md
 
 ### Disclaimer
 
