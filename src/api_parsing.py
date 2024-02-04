@@ -67,14 +67,14 @@ def return_highscore_api(server, community, category, type):
     if response.status_code == 200:
         logging.info(f'return_highscore_api(), fetched api: {url}')
         return response.text
-    logging.critical(f'return_highscore_api(), unable to fetch data, status code {response.status_code}')
+    logging.critical(f'return_highscore_api(), unable to fetch data, status code {response.status_code}\n')
     sys.exit(1)
 
 
 def return_player_ids_from_highscore_api(highscore_api_xml):
     if is_xml(highscore_api_xml):
         return re.findall(r'id="(\d+)"', highscore_api_xml)
-    logging.critical('return_player_ids_from_highscore_api(), no valid xml to parse')
+    logging.critical('return_player_ids_from_highscore_api(), no valid xml to parse\n')
     sys.exit(1)
 
 
@@ -84,28 +84,28 @@ def return_player_api(server, community, player_id):
     if response.status_code == 200:
         logging.info(f'return_player_api(), fetched api: {url}')
         return response.text
-    logging.critical(f'return_player_api(), unable to fetch data, status code {response.status_code}')
+    logging.critical(f'return_player_api(), unable to fetch data, status code {response.status_code}\n')
     sys.exit(1)
 
 
 def return_player_name(player_api_xml):
     if is_xml(player_api_xml):
         return re.findall(r'name="([^"]+)"', player_api_xml)[0]
-    logging.critical('return_player_name(), no valid xml to parse')
+    logging.critical('return_player_name(), no valid xml to parse\n')
     sys.exit(1)
 
 
 def return_player_coords(player_api_xml):
     if is_xml(player_api_xml):
         return re.findall(r'coords="([^"]+)"', player_api_xml)
-    logging.critical('return_player_coords(), no valid xml to parse')
+    logging.critical('return_player_coords(), no valid xml to parse\n')
     sys.exit(1)
 
 
 def return_player_home_planet_coords(player_api_xml):
     if is_xml(player_api_xml):
         return return_player_coords(player_api_xml)[0]
-    logging.critical('return_player_home_planet_coords(), no valid xml to parse')
+    logging.critical('return_player_home_planet_coords(), no valid xml to parse\n')
     sys.exit(1)
 
 
@@ -114,7 +114,7 @@ def return_api_timestamp(api_xml):
         timestamp = re.findall(r'timestamp="(\d+)"', api_xml)[0]
         logging.info(f'return_api_timestamp(), fetched timestamp: {timestamp}')
         return timestamp
-    logging.critical('return_api_timestamp(), no valid xml to parse')
+    logging.critical('return_api_timestamp(), no valid xml to parse\n')
     sys.exit(1)
 
 

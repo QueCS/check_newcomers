@@ -17,7 +17,7 @@ def main():
 
     ts_match, old_timestamp, new_timestamp = timestamps_match(military_highscore_api_xml)
     if ts_match:
-        logging.info(f'timestamps_match(), {new_timestamp} = {old_timestamp}, nothing to update, exiting...')
+        logging.info(f'timestamps_match(), {new_timestamp} = {old_timestamp}, nothing to update, exiting...\n')
         sys.exit(0)
     logging.info(f'timestamps_match(), {new_timestamp} != {old_timestamp}, carrying on...')
 
@@ -25,7 +25,7 @@ def main():
 
     pl_match, new_players = players_match(military_highscore_api_xml)
     if pl_match:
-        logging.info('players_match(), no new players detected, nothing to update, exiting...')
+        logging.info('players_match(), no new players detected, nothing to update, exiting...\n')
         sys.exit(0)
     logging.info(f'players_match(), new players detected: {new_players}, carrying on...')
 
