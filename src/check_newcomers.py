@@ -31,6 +31,13 @@ def main():
 
     update_players_file(current_players)
 
+    for player in new_players:
+        player_api_xml = ap.return_player_api(server, community, player)
+        name = ap.return_player_name(player_api_xml)
+        hp_pos = ap.return_player_home_planet_coords(player_api_xml)
+        military_points, military_rank, military_ships = ap.return_player_military_details(player_api_xml)
+        print(f'{name} ({player} - {hp_pos} - {military_points} - {military_rank} - {military_ships})')
+
 
 def timestamps_match(api_xml):
     if ap.is_xml(api_xml):

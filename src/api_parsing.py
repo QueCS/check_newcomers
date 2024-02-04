@@ -109,6 +109,16 @@ def return_player_home_planet_coords(player_api_xml):
     sys.exit(1)
 
 
+def return_player_military_details(player_api_xml):
+    if is_xml(player_api_xml):
+        military_points = int(float(re.findall(r'score="(-?\d+)(?:\.\d+)?"', player_api_xml)[3]))
+        military_rank = re.findall(r'>(\d+)</position>', player_api_xml)[3]
+        military_ships = int(float(re.findall(r'ships="(-?\d+)(?:\.\d+)?"', player_api_xml)[0]))
+        return military_points, military_rank, military_ships
+    logging.critical('return_player_name(), no valid xml to parse\n')
+    sys.exit(1)
+
+
 def return_api_timestamp(api_xml):
     if is_xml(api_xml):
         timestamp = re.findall(r'timestamp="(\d+)"', api_xml)[0]
