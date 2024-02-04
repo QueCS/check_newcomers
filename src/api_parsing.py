@@ -95,6 +95,13 @@ def return_player_name(player_api_xml):
     sys.exit(1)
 
 
+def return_player_coords(player_api_xml):
+    if is_xml(player_api_xml):
+        return re.findall(r'coords="([^"]+)"', player_api_xml)
+    logging.critical('return_player_coords(), no valid xml to parse\n')
+    sys.exit(1)
+
+
 def return_player_home_planet_coords(player_api_xml):
     if is_xml(player_api_xml):
         return return_player_coords(player_api_xml)[0]
