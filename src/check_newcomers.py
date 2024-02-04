@@ -4,10 +4,14 @@ import sys
 import json
 import datetime
 import re
+import tomllib
 
-server = 123
-community = 'fr'
-data_dir = '/home/quentin/projects/check_newcomers/data'
+with open('../config.toml', 'rb') as config_file:
+    config = tomllib.load(config_file)
+
+server = config.get('CHECK_NEWCOMERS', {}).get('server')
+community = config.get('CHECK_NEWCOMERS', {}).get('community')
+data_dir = config.get('CHECK_NEWCOMERS', {}).get('data_dir')
 
 
 def main():

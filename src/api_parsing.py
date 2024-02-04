@@ -3,9 +3,15 @@ import logging
 import sys
 import re
 import xml.etree.ElementTree as et
+import tomllib
 
-log_dir = '/home/quentin/projects/check_newcomers/logs'
-log_lvl = logging.INFO
+with open('../config.toml', 'rb') as config_file:
+    config = tomllib.load(config_file)
+
+log_dir = config.get('API_PARSING', {}).get('log_dir')
+log_lvl_str = config.get('API_PARSING', {}).get('log_lvl')
+module_name, attribute_name = log_lvl_str.rsplit('.', 1)
+log_lvl = getattr(logging, attribute_name)
 
 
 logging.basicConfig(
