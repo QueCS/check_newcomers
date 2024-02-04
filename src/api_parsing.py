@@ -71,6 +71,13 @@ def return_highscore_api(server, community, category, type):
     sys.exit(1)
 
 
+def return_player_ids_from_highscore_api(highscore_api_xml):
+    if is_xml(highscore_api_xml):
+        return re.findall(r'id="(\d+)"', highscore_api_xml)
+    logging.critical('When calling return_player_ids_from_highscore_api(), no valid xml to parse')
+    sys.exit(1)
+
+
 def return_player_api(server, community, player_id):
     url = f'https://s{server}-{community}.ogame.gameforge.com/api/playerData.xml?id={player_id}'
     response = requests.get(url, timeout=1, allow_redirects=False)
