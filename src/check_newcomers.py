@@ -2,6 +2,8 @@ import api_parsing as ap
 import logging
 import sys
 import json
+import datetime
+import re
 
 server = 123
 community = 'fr'
@@ -17,22 +19,30 @@ def main():
         sys.exit(0)
     logging.info(f'timestamps_match(), {new_timestamp} != {old_timestamp}')
 
-    update_timestamp_file(new_timestamp)
-
     pl_match, current_players, new_players = players_match(military_highscore_api_xml)
     if pl_match:
         logging.info('players_match(), no new players detected, nothing to update, exiting\n')
         sys.exit(0)
     logging.info(f'players_match(), new players detected: {new_players}')
 
-    update_players_file(current_players)
+    update_datetime = datetime.datetime.fromtimestamp(int(new_timestamp))
+
+    new_players_str = f'[New players - {update_datetime}]\n'
 
     for player in new_players:
+        if is_of_interest(military_highscore_api_xml, player, 500000) is False:
+            logging.info(f'is_of_interest(), rejecting {player}')
+            break
         player_api_xml = ap.return_player_api(server, community, player)
-        name = ap.return_player_name(player_api_xml)
+        name = ap.return_player_name(player_api_xml).ljust(15)
         hp_pos = ap.return_player_home_planet_coords(player_api_xml)
         military_points, military_rank, military_ships = ap.return_player_military_details(player_api_xml)
-        print(f'{name} ({player} - {hp_pos} - {military_points} - {military_rank} - {military_ships})')
+        id_pos = f'({player} - {hp_pos})'
+        new_players_str += f'\n{name} {id_pos.ljust(15)}     {military_points:,} ({military_ships:,})'
+    print('```ini\n' + new_players_str.replace(',', '.') + '\n```')
+
+    # update_timestamp_file(new_timestamp)
+    # update_players_file(current_players)
 
 
 def timestamps_match(api_xml):
@@ -66,6 +76,16 @@ def players_match(api_xml):
 def update_players_file(new_players):
     with open(f'{data_dir}/{server}_{community}_players.json', 'w') as players_file:
         json.dump(new_players, players_file)
+
+
+def is_of_interest(highscore_api_xml, player, limit):
+    if ap.is_xml(highscore_api_xml):
+        military_points = re.findall(rf'id="{player}" score="(-?\d+)(?:\.\d+)?"', highscore_api_xml)[0]
+        if int(military_points) < limit:
+            return False
+        return True
+    logging.critical('is_of_interest(), no valid xml to parse')
+    sys.exit(1)
 
 
 if __name__ == '__main__':

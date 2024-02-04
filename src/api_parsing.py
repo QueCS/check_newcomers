@@ -112,7 +112,8 @@ def return_player_home_planet_coords(player_api_xml):
 def return_player_military_details(player_api_xml):
     if is_xml(player_api_xml):
         military_points = int(float(re.findall(r'score="(-?\d+)(?:\.\d+)?"', player_api_xml)[3]))
-        if military_points == 0:
+        if military_points < 500000:
+            military_points = 0
             military_rank = 0
             military_ships = 0
         else:
