@@ -11,7 +11,7 @@ log_lvl = logging.INFO
 logging.basicConfig(
     filename=f'{log_dir}/check_newcomers.log',
     filemode='a',
-    format='%(asctime)s API_PARSING.PY %(levelname)s %(message)s',
+    format='%(asctime)s %(levelname)s %(message)s',
     level=log_lvl,
 )
 

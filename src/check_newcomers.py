@@ -12,14 +12,6 @@ log_lvl = logging.INFO
 data_dir = '/home/quentin/projects/check_newcomers/data'
 
 
-# logging.basicConfig(
-#    filename=f'{log_dir}/check_newcomers.log',
-#    filemode='a',
-#    format='%(asctime)s CHECK_NEWCOMERS.PY %(levelname)s %(message)s',
-#    level=log_lvl,
-# )
-
-
 def main():
     military_highscore_api_xml = ap.return_highscore_api(server, community, 1, 3)
 
