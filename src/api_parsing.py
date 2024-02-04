@@ -4,6 +4,9 @@ import sys
 import re
 import xml.etree.ElementTree as et
 import tomllib
+import os
+
+os.chdir(f'{os.path.dirname(__file__)}')
 
 with open('../config.toml', 'rb') as config_file:
     config = tomllib.load(config_file)
