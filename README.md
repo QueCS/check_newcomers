@@ -1,6 +1,6 @@
 # Check Newcomers
 
-Python script to check new player arrivals on OGame servers through [OGame public APIs](https://forum.origin.ogame.gameforge.com/forum/thread/44-ogame-api/).\
+Python script to check new player arrivals on OGame servers through [OGame public APIs](https://forum.origin.ogame.gameforge.com/forum/thread/44-ogame-api/).
 
 ## Directories details
 
