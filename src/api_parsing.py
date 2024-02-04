@@ -9,9 +9,9 @@ log_lvl = logging.INFO
 
 
 logging.basicConfig(
-    filename=f'{log_dir}/api_parsing.log',
+    filename=f'{log_dir}/check_newcomers.log',
     filemode='a',
-    format='%(asctime)s %(levelname)s %(message)s',
+    format='%(asctime)s API_PARSING.PY %(levelname)s %(message)s',
     level=log_lvl,
 )
 
@@ -110,9 +110,12 @@ def return_player_home_planet_coords(player_api_xml):
 
 
 def return_api_timestamp(api_xml):
-    timestamp = re.findall(r'timestamp="(\d+)"', api_xml)[0]
-    logging.info(f'Fetched timestamp: {timestamp}')
-    return timestamp
+    if is_xml(api_xml):
+        timestamp = re.findall(r'timestamp="(\d+)"', api_xml)[0]
+        logging.info(f'Fetched timestamp: {timestamp}')
+        return timestamp
+    logging.critical('When calling return_api_timestamp(), no valid xml to parse')
+    sys.exit(1)
 
 
 if __name__ == '__main__':
