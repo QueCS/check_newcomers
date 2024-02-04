@@ -30,7 +30,26 @@ check_newcomers\
 ├─ LICENSE.md\
 └─ README.md
 
-### Disclaimer
+## Getting started
+
+Clone the repository at the desired location.\
+`git clone https://github.com/QueCS/check_newcomers.git`
+
+Hop into it.\
+`cd check_newcomers`
+
+Copy `config_example.toml` as `config.toml`.\
+`cp config_example.toml config.toml`
+
+Create `data` and `logs` directories at the desired locations. You can simply create them in the current directory.\
+`mkdir data logs`
+
+Modify `config.toml` in order to match your setup.\
+
+Run the script.\
+`python3 src/check_newcomers.py`
+
+## Disclaimer
 
 [OGame](https://gameforge.com/play/ogame) is a registered trademark of [Gameforge Productions GmbH](https://gameforge.com).\
 I am not affiliated with, endorsed by, or in any way officially connected to OGame or Gameforge Productions GmbH.
