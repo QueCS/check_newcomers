@@ -55,7 +55,7 @@ def players_match(api_xml):
         with open(f'{data_dir}/{server}_{community}_players.json', 'r') as old_players_file:
             old_players = json.load(old_players_file)
             if new_players == old_players:
-                return True
+                return True, new_players
             return False, new_players
 
 
