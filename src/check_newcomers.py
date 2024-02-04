@@ -8,15 +8,16 @@ community = 'fr'
 
 log_dir = '/home/quentin/projects/check_newcomers/logs'
 log_lvl = logging.INFO
+
 data_dir = '/home/quentin/projects/check_newcomers/data'
 
 
-logging.basicConfig(
-    filename=f'{log_dir}/check_newcomers.log',
-    filemode='a',
-    format='%(asctime)s CHECK_NEWCOMERS.PY %(levelname)s %(message)s',
-    level=log_lvl,
-)
+# logging.basicConfig(
+#    filename=f'{log_dir}/check_newcomers.log',
+#    filemode='a',
+#    format='%(asctime)s CHECK_NEWCOMERS.PY %(levelname)s %(message)s',
+#    level=log_lvl,
+# )
 
 
 def main():
@@ -24,17 +25,17 @@ def main():
 
     ts_match, old_timestamp, new_timestamp = timestamps_match(military_highscore_api_xml)
     if ts_match:
-        logging.info(f'timestamps_match(), timestamps match, {new_timestamp} = {old_timestamp}, nothing to update, exiting...')
+        logging.info(f'timestamps_match(), {new_timestamp} = {old_timestamp}, nothing to update, exiting...')
         sys.exit(0)
-    logging.info(f'timestamps_match(), timestamps do not match, {new_timestamp} != {old_timestamp}, carrying on...')
+    logging.info(f'timestamps_match(), {new_timestamp} != {old_timestamp}, carrying on...')
 
     update_timestamp_file(new_timestamp)
 
     pl_match, new_players = players_match(military_highscore_api_xml)
     if pl_match:
-        logging.info('players_match(), old and new player lists match, nothing to update, exiting...')
+        logging.info('players_match(), no new players detected, nothing to update, exiting...')
         sys.exit(0)
-    logging.info(f'players_match(), new players detected, {new_players}, carrying on...')
+    logging.info(f'players_match(), new players detected: {new_players}, carrying on...')
 
     update_players_file(new_players)
 
@@ -42,7 +43,7 @@ def main():
 def timestamps_match(api_xml):
     if ap.is_xml(api_xml):
         new_timestamp = ap.return_api_timestamp(api_xml)
-        with open(f'data/{server}_{community}_timestamp.json', 'r') as old_timestamp_file:
+        with open(f'{data_dir}/{server}_{community}_timestamp.json', 'r') as old_timestamp_file:
             old_timestamp = json.load(old_timestamp_file)
             if new_timestamp == old_timestamp:
                 return True, old_timestamp, new_timestamp
@@ -52,14 +53,14 @@ def timestamps_match(api_xml):
 
 
 def update_timestamp_file(new_timestamp):
-    with open(f'{data_dir}/timestamp.json', 'w') as timestamp_file:
+    with open(f'{data_dir}/{server}_{community}_timestamp.json', 'w') as timestamp_file:
         json.dump(new_timestamp, timestamp_file)
 
 
 def players_match(api_xml):
     if ap.is_xml(api_xml):
         new_players = ap.return_player_ids_from_highscore_api(api_xml)
-        with open(f'data/{server}_{community}_players.json', 'r') as old_players_file:
+        with open(f'{data_dir}/{server}_{community}_players.json', 'r') as old_players_file:
             old_players = json.load(old_players_file)
             if new_players == old_players:
                 return True
@@ -67,7 +68,7 @@ def players_match(api_xml):
 
 
 def update_players_file(new_players):
-    with open(f'{data_dir}/players.json', 'w') as players_file:
+    with open(f'{data_dir}/{server}_{community}_players.json', 'w') as players_file:
         json.dump(new_players, players_file)
 
 
