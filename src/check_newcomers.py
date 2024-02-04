@@ -37,12 +37,13 @@ def main():
         name = ap.return_player_name(player_api_xml).ljust(15)
         hp_pos = ap.return_player_home_planet_coords(player_api_xml)
         military_points, military_rank, military_ships = ap.return_player_military_details(player_api_xml)
-        id_pos = f'({player} - {hp_pos})'
-        new_players_str += f'\n{name} {id_pos.ljust(15)}     {military_points:,} ({military_ships:,})'
+        military_points_str = (f'{military_points:,}').replace(',', '.').ljust(15)
+        military_ships_str = (f'{military_ships:,}').replace(',', '.')
+        new_players_str += f'\n{name.ljust(20)}   |   {player}   |   {hp_pos.ljust(8)}   |   {military_points_str}   |   {military_ships_str}'
     print('```ini\n' + new_players_str.replace(',', '.') + '\n```')
 
-    # update_timestamp_file(new_timestamp)
-    # update_players_file(current_players)
+    update_timestamp_file(new_timestamp)
+    update_players_file(current_players)
 
 
 def timestamps_match(api_xml):
