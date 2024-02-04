@@ -63,7 +63,7 @@ def return_highscore_api(server, community, category, type):
         SystemExit: If unable to fetch data, the script exits with a status code of 1.
     """
     url = f'https://s{server}-{community}.ogame.gameforge.com/api/highscore.xml?category={category}&type={type}'
-    response = requests.get(url, timeout=1, allow_redirects=False)
+    response = requests.get(url, timeout=5, allow_redirects=False)
     if response.status_code == 200:
         logging.info(f'return_highscore_api(), fetched api: {url}')
         return response.text
@@ -80,7 +80,7 @@ def return_player_ids_from_highscore_api(highscore_api_xml):
 
 def return_player_api(server, community, player_id):
     url = f'https://s{server}-{community}.ogame.gameforge.com/api/playerData.xml?id={player_id}'
-    response = requests.get(url, timeout=1, allow_redirects=False)
+    response = requests.get(url, timeout=5, allow_redirects=False)
     if response.status_code == 200:
         logging.info(f'return_player_api(), fetched api: {url}')
         return response.text
@@ -112,10 +112,14 @@ def return_player_home_planet_coords(player_api_xml):
 def return_player_military_details(player_api_xml):
     if is_xml(player_api_xml):
         military_points = int(float(re.findall(r'score="(-?\d+)(?:\.\d+)?"', player_api_xml)[3]))
-        military_rank = re.findall(r'>(\d+)</position>', player_api_xml)[3]
-        military_ships = int(float(re.findall(r'ships="(-?\d+)(?:\.\d+)?"', player_api_xml)[0]))
-        return military_points, military_rank, military_ships
-    logging.critical('return_player_name(), no valid xml to parse\n')
+        if military_points == 0:
+            military_rank = 0
+            military_ships = 0
+        else:
+            military_rank = re.findall(r'>(\d+)</position>', player_api_xml)[3]
+            military_ships = int(float(re.findall(r'ships="(-?\d+)(?:\.\d+)?"', player_api_xml)[0]))
+            return military_points, military_rank, military_ships
+    logging.critical('return_player_military_details(), no valid xml to parse\n')
     sys.exit(1)
 
 

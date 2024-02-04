@@ -5,10 +5,6 @@ import json
 
 server = 123
 community = 'fr'
-
-log_dir = '/home/quentin/projects/check_newcomers/logs'
-log_lvl = logging.INFO
-
 data_dir = '/home/quentin/projects/check_newcomers/data'
 
 
