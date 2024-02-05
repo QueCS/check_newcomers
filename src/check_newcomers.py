@@ -49,6 +49,9 @@ def main():
     update_timestamp_file(new_timestamp)
     update_players_file(current_players)
 
+    logging.info('check_newcomers.py, done\n')
+    sys.exit(0)
+
 
 def timestamps_match(api_xml):
     if ap.is_xml(api_xml):
