@@ -22,10 +22,8 @@ def main():
 
     ts_match, old_timestamp, new_timestamp = timestamps_match(military_highscore_api_xml)
     if ts_match:
-        update_timestamp_file(new_timestamp)
         logging.info(f'timestamps_match(), {new_timestamp} = {old_timestamp}, nothing to update, exiting\n')
         sys.exit(0)
-    update_timestamp_file(new_timestamp)
     logging.info(f'timestamps_match(), {new_timestamp} != {old_timestamp}')
 
     pl_match, current_players, new_players = players_match(military_highscore_api_xml)
@@ -53,6 +51,8 @@ def main():
         military_ships_str = (f'{military_ships:,}').replace(',', '.')
         new_players_str += f'\n{name.ljust(20)}   |   {player}   |   {hp_pos.ljust(8)}   |   {military_points_str}   |   {military_ships_str}'
     print('```ini\n' + new_players_str.replace(',', '.') + '\n```')
+
+    update_timestamp_file(new_timestamp)
 
     logging.info('check_newcomers.py, done\n')
     sys.exit(0)
