@@ -78,7 +78,7 @@ def main():
         new_players_str += f'{military_points_str}     '
         new_players_str += f'{military_ships_str}'
 
-        # sleep 500 ms to avoid the API server blocking the requests
+        # Sleep 500 ms to avoid the API server blocking the requests
         time.sleep(0.5)
 
     # Finalize the payload string
