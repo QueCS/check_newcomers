@@ -44,7 +44,7 @@ Copy `config_example.toml` as `config.toml`.\
 Create `data` and `logs` directories at the desired locations. You can simply create them in the current directory.\
 `mkdir data logs`
 
-Modify `config.toml` in order to match your setup.\
+Modify `config.toml` in order to match your setup.
 
 Run the script.\
 `python3 src/check_newcomers.py`
