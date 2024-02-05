@@ -28,6 +28,7 @@ def main():
 
     pl_match, current_players, new_players = players_match(military_highscore_api_xml)
     if pl_match:
+        update_timestamp_file(new_timestamp)
         update_players_file(current_players)
         logging.info('players_match(), no new players detected, nothing to update, exiting\n')
         sys.exit(0)
