@@ -5,6 +5,7 @@ import json
 import datetime
 import re
 import tomllib
+import time
 
 with open('../config.toml', 'rb') as config_file:
     config = tomllib.load(config_file)
@@ -15,18 +16,24 @@ data_dir = config.get('CHECK_NEWCOMERS', {}).get('data_dir')
 
 
 def main():
+    logging.info('check_newcomers.py, started')
+
     military_highscore_api_xml = ap.return_highscore_api(server, community, 1, 3)
 
     ts_match, old_timestamp, new_timestamp = timestamps_match(military_highscore_api_xml)
     if ts_match:
+        update_timestamp_file(new_timestamp)
         logging.info(f'timestamps_match(), {new_timestamp} = {old_timestamp}, nothing to update, exiting\n')
         sys.exit(0)
+    update_timestamp_file(new_timestamp)
     logging.info(f'timestamps_match(), {new_timestamp} != {old_timestamp}')
 
     pl_match, current_players, new_players = players_match(military_highscore_api_xml)
     if pl_match:
+        update_players_file(current_players)
         logging.info('players_match(), no new players detected, nothing to update, exiting\n')
         sys.exit(0)
+    update_players_file(current_players)
     logging.info(f'players_match(), new players detected: {new_players}')
 
     update_datetime = datetime.datetime.fromtimestamp(int(new_timestamp))
@@ -37,6 +44,7 @@ def main():
         if is_of_interest(military_highscore_api_xml, player, 500000) is False:
             logging.info(f'is_of_interest(), rejecting {player}')
             break
+        time.sleep(0.5)
         player_api_xml = ap.return_player_api(server, community, player)
         name = ap.return_player_name(player_api_xml).ljust(15)
         hp_pos = ap.return_player_home_planet_coords(player_api_xml)
@@ -45,9 +53,6 @@ def main():
         military_ships_str = (f'{military_ships:,}').replace(',', '.')
         new_players_str += f'\n{name.ljust(20)}   |   {player}   |   {hp_pos.ljust(8)}   |   {military_points_str}   |   {military_ships_str}'
     print('```ini\n' + new_players_str.replace(',', '.') + '\n```')
-
-    update_timestamp_file(new_timestamp)
-    update_players_file(current_players)
 
     logging.info('check_newcomers.py, done\n')
     sys.exit(0)
@@ -61,7 +66,7 @@ def timestamps_match(api_xml):
             if new_timestamp == old_timestamp:
                 return True, old_timestamp, new_timestamp
             return False, old_timestamp, new_timestamp
-    logging.critical('timestamps_match(), no valid xml to parse')
+    logging.critical('timestamps_match(), no valid xml to parse\n')
     sys.exit(1)
 
 
@@ -92,7 +97,7 @@ def is_of_interest(highscore_api_xml, player, limit):
         if int(military_points) < limit:
             return False
         return True
-    logging.critical('is_of_interest(), no valid xml to parse')
+    logging.critical('is_of_interest(), no valid xml to parse\n')
     sys.exit(1)
 
 
