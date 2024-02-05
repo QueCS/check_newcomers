@@ -107,7 +107,7 @@ def get_player_ids(xml_tree):
             id = child.attrib.get('id')
             ids.append(id)
         except KeyError:
-            logging.warning('Calling get_player_ids(): Attribute "id" not found in XML tree.')
+            logging.warning('Calling get_player_ids(): Attribute "id" not found in XML tree')
             return None
     return ids
 
@@ -166,7 +166,7 @@ def get_player_name(xml_tree):
     try:
         return xml_tree.attrib['name']
     except KeyError:
-        logging.warning('Calling get_player_name(): Attribute "name" not found in XML tree.')
+        logging.warning('Calling get_player_name(): Attribute "name" not found in XML tree')
         return None
 
 
@@ -187,7 +187,7 @@ def get_player_home(xml_tree):
     player_home = xml_tree[1][0].get('coords')
 
     if player_home is None:
-        logging.warning('Calling get_player_home(): Attribute "coords" not found in XML tree.')
+        logging.warning('Calling get_player_home(): Attribute "coords" not found in XML tree')
         return None
     return player_home
 
@@ -212,7 +212,7 @@ def get_military_points(xml_tree):
     pts_str = xml_tree[0][3].get('score')
 
     if pts_str is None:
-        logging.warning('Calling get_military_points(): Attribute "score" not found in XML tree.')
+        logging.warning('Calling get_military_points(): Attribute "score" not found in XML tree')
         return None
     try:
         pts_float = float(pts_str)
@@ -250,7 +250,7 @@ def get_ship_count(xml_tree):
     ships_str = xml_tree[0][3].get('ships')
 
     if ships_str is None:
-        logging.warning('Calling get_ship_count(): Attribute "ships" not found in XML tree. Setting ship count to int(0).')
+        logging.warning('Calling get_ship_count(): Attribute "ships" not found in XML tree. Setting ship count to 0')
         return int(0)
     try:
         ships_float = float(ships_str)
@@ -285,7 +285,7 @@ def get_timestamp(xml_tree):
     try:
         timestamp = xml_tree.attrib['timestamp']
     except KeyError:
-        logging.warning('Calling get_timestamp(): Attribute "timestamp" not found in XML tree.')
+        logging.warning('Calling get_timestamp(): Attribute "timestamp" not found in XML tree')
         return None
     return int(timestamp)
 

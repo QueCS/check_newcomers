@@ -35,9 +35,9 @@ def main():
         old_ts = int(json.load(timestamp_file))
     new_ts = ap.get_timestamp(highscore_api)
     if old_ts == new_ts:
-        logging.info(f'Timestamps match: {old_ts} == {new_ts}, API not updated, exiting\n')
+        logging.info(f'Timestamps match: {old_ts} == {new_ts}, API not updated, exiting !\n')
         sys.exit(0)
-    logging.info(f'Timestamps differ: {old_ts} != {new_ts}, API updated, pursuing')
+    logging.info(f'Timestamps differ: {old_ts} != {new_ts}, API updated')
 
     # Compare old and current player lists checking for new players
     with open(f'{data_dir}/{server}_{community}_players.json', 'r') as players_file:
@@ -45,7 +45,7 @@ def main():
     current_players = ap.get_player_ids(highscore_api)
     new_players = [x for x in current_players if x not in old_players]
     if len(new_players) == 0:
-        logging.info(f'No new players detected, updating {data_dir}/{server}_{community}_timestamp.json and exiting\n')
+        logging.info(f'No new players detected, updating {data_dir}/{server}_{community}_timestamp.json and exiting !\n')
         with open(f'{data_dir}/{server}_{community}_timestamp.json', 'w') as timestamp_file:
             json.dump(new_ts, timestamp_file)
         sys.exit(0)
@@ -65,10 +65,14 @@ def main():
     for player_id in new_players:
         logging.info(f'Processing player {player_id}')
         player_api = ap.get_player_api(server, community, player_id)
-        player_name = ap.get_player_name(player_api)
-        player_home = ap.get_player_home(player_api)
-        player_military_points = ap.get_military_points(player_api)
-        player_ship_count = ap.get_ship_count(player_api)
+        if player_api:
+            player_name = ap.get_player_name(player_api)
+            player_home = ap.get_player_home(player_api)
+            player_military_points = ap.get_military_points(player_api)
+            player_ship_count = ap.get_ship_count(player_api)
+        else:
+            logging.critical('API was not fetched, exiting !\n')
+            sys.exit(1)
 
         # Format military points and ship count
         military_points_str = (f'{player_military_points:,}').replace(',', '.').ljust(15)
