@@ -4,16 +4,16 @@ Python script to check new player arrivals on OGame servers through [OGame publi
 
 ## Directories details
 
-`data` directory should contain automatically generated .json files keeping track of last API update timestamp and known players.\
-`logs` directory should countain an automatically generated .log text file.\
-`src` directory should contain all scripts.
+The `data` directory should contain automatically generated .json files keeping track of last API update timestamp and known players.\
+The `logs` directory should countain an automatically generated .log text file.\
+The `src` directory should contain all scripts.
 
 ## Configs details
 
-`config_example.toml` file shows how your personal and private `config.toml` file should look like.\
-`config.toml` file of appropriate inner format is mandatory for the scripts to run.
+The `config_example.toml` file shows how your personal and private `config.toml` file should look like.\
+The `config.toml` file of appropriate inner format is mandatory for the scripts to run.
 
-## Directory structure
+## Proposed directory structure
 
 check_newcomers\
 ├─ data\
