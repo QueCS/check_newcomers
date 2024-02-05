@@ -45,8 +45,11 @@ def main():
     current_players = ap.get_player_ids(highscore_api)
     new_players = [x for x in current_players if x not in old_players]
     if len(new_players) == 0:
-        logging.info('No new players detected, exiting\n')
+        logging.info(f'No new players detected, updating {data_dir}/{server}_{community}_timestamp.json and exiting\n')
+        with open(f'{data_dir}/{server}_{community}_timestamp.json', 'w') as timestamp_file:
+            json.dump(new_ts, timestamp_file)
         sys.exit(0)
+
     logging.info(f'New players detected: {new_players}')
 
     # Set up payload string
@@ -78,6 +81,12 @@ def main():
         new_players_str += f'{military_points_str}     '
         new_players_str += f'{military_ships_str}'
 
+        # Update players.json with processed player
+        logging.info(f'Adding entry to {data_dir}/{server}_{community}_players.json')
+        old_players.append(f'{player_id}')
+        with open(f'{data_dir}/{server}_{community}_players.json', 'w') as players_file:
+            json.dump(old_players, players_file)
+
         # Sleep 500 ms to avoid the API server blocking the requests
         time.sleep(0.5)
 
@@ -89,11 +98,6 @@ def main():
     logging.info(f'Updating {data_dir}/{server}_{community}_timestamp.json')
     with open(f'{data_dir}/{server}_{community}_timestamp.json', 'w') as timestamp_file:
         json.dump(new_ts, timestamp_file)
-
-    # Update players.json
-    logging.info(f'Updating {data_dir}/{server}_{community}_players.json')
-    with open(f'{data_dir}/{server}_{community}_players.json', 'w') as players_file:
-        json.dump(current_players, players_file)
 
     logging.info('Done !\n')
 
