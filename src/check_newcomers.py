@@ -1,74 +1,61 @@
-import api_parsing as ap
-import logging
-import sys
-import json
-import datetime
-import re
+# Load necessary modules
+import os
 import tomllib
-import time
+import logging
+import api_parsing as ap
+import json
+import sys
 
+# Set the working directory to this script location
+os.chdir(f'{os.path.dirname(__file__)}')
+
+# Parse the configuration file
 with open('../config.toml', 'rb') as config_file:
     config = tomllib.load(config_file)
 
+# Extract configuration parameters: server of interest
 server = config.get('CHECK_NEWCOMERS', {}).get('server')
+
+# Extract configuration parameters: community of interest
 community = config.get('CHECK_NEWCOMERS', {}).get('community')
+
+# Extract configuration parameters: data directory
 data_dir = config.get('CHECK_NEWCOMERS', {}).get('data_dir')
 
 
 def main():
-    logging.info('check_newcomers.py, started')
+    logging.info('Starting up !')
 
-    military_highscore_api_xml = ap.return_highscore_api(server, community, 1, 3)
+    highscore_api = ap.get_highscore_api(server, community, '1', '3')
 
-    ts_match, old_timestamp, new_timestamp = timestamps_match(military_highscore_api_xml)
-    if ts_match:
-        logging.info(f'timestamps_match(), {new_timestamp} = {old_timestamp}, nothing to update, exiting\n')
+    # Compare old and new timestamp to determine whether the API was updated or not
+    with open(f'{data_dir}/{server}_{community}_timestamp.json', 'r') as timestamp_file:
+        old_ts = int(json.load(timestamp_file))
+    new_ts = ap.get_timestamp(highscore_api)
+    if old_ts == new_ts:
+        logging.info(f'Timestamps match: {old_ts} == {new_ts}, API not updated, exiting\n')
         sys.exit(0)
-    logging.info(f'timestamps_match(), {new_timestamp} != {old_timestamp}')
+    logging.info(f'Timestamps differ: {old_ts} != {new_ts}, API updated, pursuing')
 
-    pl_match, current_players, new_players = players_match(military_highscore_api_xml)
-    if pl_match:
-        update_timestamp_file(new_timestamp)
-        update_players_file(current_players)
-        logging.info('players_match(), no new players detected, nothing to update, exiting\n')
-        sys.exit(0)
-    update_players_file(current_players)
-    logging.info(f'players_match(), new players detected: {new_players}')
+    # Compare old and current player lists checking for new players
+    with open(f'{data_dir}/{server}_{community}_players.json', 'r') as players_file:
+        old_players = json.load(players_file)
+    current_players = ap.get_player_ids(highscore_api)
+    new_players = [x for x in current_players if x not in old_players]
+    if len(new_players) == 0:
+        logging.info('No new players detected, exiting\n')
+    logging.info(f'New players detected: {new_players}')
 
-    update_datetime = datetime.datetime.fromtimestamp(int(new_timestamp))
+    # Loop through new players fetching data
+    for player_id in new_players:
+        player_api = ap.get_player_api(server, community, player_id)
+        player_name = ap.get_player_name(player_api)
+        player_home = ap.get_player_home(player_api)
+        player_military_points = ap.get_military_points(player_api)
+        player_ship_count = ap.get_ship_count(player_api)
+        print(player_name, player_id, player_home, player_military_points, player_ship_count)
 
-    new_players_str = f'[New players - {update_datetime}]\n'
-
-    for player in new_players:
-        if is_of_interest(military_highscore_api_xml, player, 500000) is False:
-            logging.info(f'is_of_interest(), rejecting {player}')
-            break
-        time.sleep(0.5)
-        player_api_xml = ap.return_player_api(server, community, player)
-        name = ap.return_player_name(player_api_xml).ljust(15)
-        hp_pos = ap.return_player_home_planet_coords(player_api_xml)
-        military_points, military_rank, military_ships = ap.return_player_military_details(player_api_xml)
-        military_points_str = (f'{military_points:,}').replace(',', '.').ljust(15)
-        military_ships_str = (f'{military_ships:,}').replace(',', '.')
-        new_players_str += f'\n{name.ljust(20)}   |   {player}   |   {hp_pos.ljust(8)}   |   {military_points_str}   |   {military_ships_str}'
-    print('```ini\n' + new_players_str.replace(',', '.') + '\n```')
-
-    update_timestamp_file(new_timestamp)
-
-    logging.info('check_newcomers.py, done\n')
-    sys.exit(0)
-
-
-def timestamps_match(api_xml):
-    if ap.is_xml(api_xml):
-        new_timestamp = ap.return_api_timestamp(api_xml)
-        with open(f'{data_dir}/{server}_{community}_timestamp.json', 'r') as old_timestamp_file:
-            old_timestamp = json.load(old_timestamp_file)
-            if new_timestamp == old_timestamp:
-                return True, old_timestamp, new_timestamp
-            return False, old_timestamp, new_timestamp
-    logging.critical('timestamps_match(), no valid xml to parse\n')
-    sys.exit(1)
+    logging.info('Done !\n')
 
 
 def update_timestamp_file(new_timestamp):
@@ -90,16 +77,6 @@ def players_match(api_xml):
 def update_players_file(new_players):
     with open(f'{data_dir}/{server}_{community}_players.json', 'w') as players_file:
         json.dump(new_players, players_file)
-
-
-def is_of_interest(highscore_api_xml, player, limit):
-    if ap.is_xml(highscore_api_xml):
-        military_points = re.findall(rf'id="{player}" score="(-?\d+)(?:\.\d+)?"', highscore_api_xml)[0]
-        if int(military_points) < limit:
-            return False
-        return True
-    logging.critical('is_of_interest(), no valid xml to parse\n')
-    sys.exit(1)
 
 
 if __name__ == '__main__':
