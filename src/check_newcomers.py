@@ -60,11 +60,12 @@ def main():
 
     # Loop through new players fetching data
     for player_id in new_players:
+        logging.info(f'Processing player {player_id}')
         player_api = ap.get_player_api(server, community, player_id)
         player_name = ap.get_player_name(player_api)
         player_home = ap.get_player_home(player_api)
-        player_military_points = ap.get_military_points(player_api, player_id)
-        player_ship_count = ap.get_ship_count(player_api, player_id)
+        player_military_points = ap.get_military_points(player_api)
+        player_ship_count = ap.get_ship_count(player_api)
 
         # Format military points and ship count
         military_points_str = (f'{player_military_points:,}').replace(',', '.').ljust(15)
