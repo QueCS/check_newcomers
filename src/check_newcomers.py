@@ -51,8 +51,8 @@ def main():
         player_api = ap.get_player_api(server, community, player_id)
         player_name = ap.get_player_name(player_api)
         player_home = ap.get_player_home(player_api)
-        player_military_points = ap.get_military_points(player_api)
-        player_ship_count = ap.get_ship_count(player_api)
+        player_military_points = ap.get_military_points(player_api, player_id)
+        player_ship_count = ap.get_ship_count(player_api, player_id)
         print(player_name, player_id, player_home, player_military_points, player_ship_count)
 
     logging.info('Done !\n')

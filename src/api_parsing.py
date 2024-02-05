@@ -192,7 +192,7 @@ def get_player_home(xml_tree):
     return player_home
 
 
-def get_military_points(xml_tree):
+def get_military_points(xml_tree, player_id):
     """
     Retrieve military points of the player of interest from OGame player API.
 
@@ -212,22 +212,22 @@ def get_military_points(xml_tree):
     pts_str = xml_tree[0][3].get('score')
 
     if pts_str is None:
-        logging.warning('Calling get_military_points(): Attribute "score" not found in XML tree.')
+        logging.warning(f'Calling get_military_points({player_id}): Attribute "score" not found in XML tree.')
         return None
     try:
         pts_float = float(pts_str)
     except ValueError as error:
-        logging.warning(f'Calling get_military_points(): {error}')
+        logging.warning(f'Calling get_military_points({player_id}): {error}')
         return None
     try:
         pts_int = int(pts_float)
     except ValueError as error:
-        logging.warning(f'Calling get_military_points(): {error}')
+        logging.warning(f'Calling get_military_points({player_id}): {error}')
         return None
     return pts_int
 
 
-def get_ship_count(xml_tree):
+def get_ship_count(xml_tree, player_id):
     """
     Retrieve ship count of the player of interest from OGame player API.
 
@@ -250,17 +250,17 @@ def get_ship_count(xml_tree):
     ships_str = xml_tree[0][3].get('ships')
 
     if ships_str is None:
-        logging.warning('Calling get_ship_count(): Attribute "ships" not found in XML tree. Setting ship count to int(0).')
+        logging.warning(f'Calling get_ship_count({player_id}): Attribute "ships" not found in XML tree. Setting ship count to int(0).')
         return int(0)
     try:
         ships_float = float(ships_str)
     except ValueError as error:
-        logging.warning(f'Calling get_ship_count(): {error}')
+        logging.warning(f'Calling get_ship_count({player_id}): {error}')
         return None
     try:
         ships_int = int(ships_float)
     except ValueError as error:
-        logging.warning(f'Calling get_ship_count(): {error}')
+        logging.warning(f'Calling get_ship_count({player_id}): {error}')
         return None
     return ships_int
 
