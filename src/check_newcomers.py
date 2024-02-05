@@ -78,15 +78,20 @@ def main():
         new_players_str += f'{military_points_str}     '
         new_players_str += f'{military_ships_str}'
 
-        # sleep 500 ms to avoid the API kicking the connection out
+        # sleep 500 ms to avoid the API server blocking the requests
         time.sleep(0.5)
 
+    # Finalize the payload string
     new_players_str += '\n```'
     print(new_players_str)
 
+    # Update timestamps.json
+    logging.info(f'Updating {data_dir}/{server}_{community}_timestamp.json')
     with open(f'{data_dir}/{server}_{community}_timestamp.json', 'w') as timestamp_file:
         json.dump(new_ts, timestamp_file)
 
+    # Update players.json
+    logging.info(f'Updating {data_dir}/{server}_{community}_players.json')
     with open(f'{data_dir}/{server}_{community}_players.json', 'w') as players_file:
         json.dump(current_players, players_file)
 
