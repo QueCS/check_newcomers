@@ -24,19 +24,25 @@ data_dir = config.get('CHECK_NEWCOMERS', {}).get('data_dir')
 
 def main():
     while True:
+        # Pause 60s between each iteration to avoid being kicked ou by the API
         time.sleep(60)
+
+        # Read the old timestamp
         with open(f'{data_dir}/{server}_{community}_timestamp.json', 'r') as timestamp_file:
             old_timestamp = int(json.load(timestamp_file))
+
+        # Format it and compare it to itself + 1h
         current_time = datetime.datetime.now()
         current_float_timestamp = current_time.timestamp()
         current_int_timestamp = int(current_float_timestamp)
+
+        # Only run cn.main() if the last API check is more than an hour old
         if current_int_timestamp > old_timestamp + 3600:
             payload = cn.main()
             if payload is False:
                 continue
             print(payload)
-            with open(f'{data_dir}/{server}_{community}_timestamp.json', 'r') as timestamp_file:
-                old_timestamp = int(json.load(timestamp_file))
+            continue
 
 
 if __name__ == '__main__':
