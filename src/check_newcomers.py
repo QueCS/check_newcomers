@@ -67,12 +67,12 @@ def main():
 
     # Set up payload string
     update_datetime = datetime.datetime.fromtimestamp(new_ts)
-    new_players_str = f'```ini\n[NEW PLAYERS ON {server}-{community.upper()} - {update_datetime}]\n'
-    new_players_str += '\n[Player]                 '
-    new_players_str += '[ID]       '
-    new_players_str += '[Pos.]       '
-    new_players_str += '[Mili.]             '
-    new_players_str += '[Ships]   \n'
+    new_players_str = f'```\n{update_datetime}\n'
+    new_players_str += '\nPlayer                   '
+    new_players_str += 'ID         '
+    new_players_str += 'Pos.         '
+    new_players_str += 'Mili.               '
+    new_players_str += 'Ships     \n'
 
     # Loop through new players fetching data
     for player_id in new_players:
