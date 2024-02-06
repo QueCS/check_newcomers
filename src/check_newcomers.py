@@ -67,7 +67,7 @@ def main():
 
     # Set up payload string
     update_datetime = datetime.datetime.fromtimestamp(new_ts)
-    new_players_str = f'```ini\n[NEW PLAYERS - {update_datetime}]\n'
+    new_players_str = f'```ini\n[NEW PLAYERS ON {server}-{community.upper()} - {update_datetime}]\n'
     new_players_str += '\n[Player]                 '
     new_players_str += '[ID]       '
     new_players_str += '[Pos.]       '

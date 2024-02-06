@@ -11,5 +11,5 @@ community = ''
 data_dir = ''
 
 [DISCORD_BOT]
-# The token obtained from https://discord.com/developers/applications for your copy of the bot
-token = ''
+# The URL of the Discord webhook to use
+webhook = ''

@@ -4,6 +4,8 @@ import check_newcomers as cn
 import json
 import datetime
 import time
+import dhooks
+import logging
 
 # Set the working directory to this script location
 os.chdir(f'{os.path.dirname(__file__)}')
@@ -21,13 +23,14 @@ community = config.get('CHECK_NEWCOMERS', {}).get('community')
 # Extract configuration parameters: data directory
 data_dir = config.get('CHECK_NEWCOMERS', {}).get('data_dir')
 
-# Extract configuration parameters: bot token
-discord_bot_token = config.get('DISCORD_BOT', {}).get('token')
+# Extract configuration parameters: discord webhook URL
+discord_webhook = config.get('DISCORD_BOT', {}).get('webhook')
+hook = dhooks.Webhook(discord_webhook)
 
 
 def main():
     while True:
-        # Pause 60s between each iteration to avoid being kicked ou by the API
+        # Pause 60s between each iteration
         time.sleep(60)
 
         # Read the old timestamp
@@ -46,7 +49,15 @@ def main():
             # Check if cn.main() returned the payload string to be further used
             if payload is False:
                 continue
-            print(payload)
+
+            # Send payload through webhook
+            logging.info('Sending payload')
+            try:
+                hook.send(payload)
+                logging.info('Payload sent !\n')
+            except Exception as exception:
+                logging.warning(f'Calling hook.send(): {exception}')
+                logging.warning('Payload not sent !\n')
             continue
 
 
