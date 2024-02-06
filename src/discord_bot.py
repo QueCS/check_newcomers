@@ -21,6 +21,9 @@ community = config.get('CHECK_NEWCOMERS', {}).get('community')
 # Extract configuration parameters: data directory
 data_dir = config.get('CHECK_NEWCOMERS', {}).get('data_dir')
 
+# Extract configuration parameters: bot token
+discord_bot_token = config.get('DISCORD_BOT', {}).get('token')
+
 
 def main():
     while True:
