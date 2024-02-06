@@ -1,10 +1,8 @@
-[API_PARSING]
+[CHECK_NEWCOMERS]
 # full path to logs storage directory
 log_dir = ''
 # recommended value, see https://docs.python.org/3/library/logging.html#logging-levels for more
 log_lvl = 'logging.INFO'
-
-[CHECK_NEWCOMERS]
 # OGame server ID
 server = ''
 # OGame community ID

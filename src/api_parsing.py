@@ -13,16 +13,22 @@ with open('../config.toml', 'rb') as config_file:
     config = tomllib.load(config_file)
 
 # Extract configuration parameters: logs directory
-log_dir = config.get('API_PARSING', {}).get('log_dir')
+log_dir = config.get('CHECK_NEWCOMERS', {}).get('log_dir')
 
 # Extract configuration parameters: logging level
-log_lvl_str = config.get('API_PARSING', {}).get('log_lvl')
+log_lvl_str = config.get('CHECK_NEWCOMERS', {}).get('log_lvl')
 module_name, attribute_name = log_lvl_str.rsplit('.', 1)
 log_lvl = getattr(logging, attribute_name)
 
+# Extract configuration parameters: server of interest
+server = config.get('CHECK_NEWCOMERS', {}).get('server')
+
+# Extract configuration parameters: community of interest
+community = config.get('CHECK_NEWCOMERS', {}).get('community')
+
 # Set up logging format
 logging.basicConfig(
-    filename=f'{log_dir}/check_newcomers.log',
+    filename=f'{log_dir}/{server}_{community}_check_newcomers.log',
     filemode='a',
     format='%(asctime)s %(levelname)s %(message)s',
     level=log_lvl,
