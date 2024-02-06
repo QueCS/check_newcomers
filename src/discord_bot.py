@@ -39,6 +39,8 @@ def main():
         # Only run cn.main() if the last API check is more than an hour old
         if current_int_timestamp > old_timestamp + 3600:
             payload = cn.main()
+
+            # Check if cn.main() returned the payload string to be further used
             if payload is False:
                 continue
             print(payload)
