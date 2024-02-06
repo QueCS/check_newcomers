@@ -25,6 +25,20 @@ data_dir = config.get('CHECK_NEWCOMERS', {}).get('data_dir')
 
 
 def main():
+    """
+    Retrieve a list of new players that arrived on the OGame server of interest between API updates.
+
+    Args: None.
+
+    Raises: None.
+
+    Returns if new players arrived:
+        str: Formated payload supposed to be passed onto a Discord server channel.
+
+    Returns if no new player arrived:
+        bool: False
+    """
+
     logging.info('Starting up !')
 
     highscore_api = ap.get_highscore_api(server, community, '1', '3')
