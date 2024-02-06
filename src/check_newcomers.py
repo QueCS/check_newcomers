@@ -36,7 +36,7 @@ def main():
     new_ts = ap.get_timestamp(highscore_api)
     if old_ts == new_ts:
         logging.info(f'Timestamps match: {old_ts} == {new_ts}, API not updated, exiting !\n')
-        sys.exit(0)
+        return False
     logging.info(f'Timestamps differ: {old_ts} != {new_ts}, API updated')
 
     # Compare old and current player lists checking for new players
@@ -48,7 +48,7 @@ def main():
         logging.info(f'No new players detected, updating {data_dir}/{server}_{community}_timestamp.json and exiting !\n')
         with open(f'{data_dir}/{server}_{community}_timestamp.json', 'w') as timestamp_file:
             json.dump(new_ts, timestamp_file)
-        sys.exit(0)
+        return False
 
     logging.info(f'New players detected: {new_players}')
 
@@ -72,7 +72,7 @@ def main():
             player_ship_count = ap.get_ship_count(player_api)
         else:
             logging.critical('API was not fetched, exiting !\n')
-            sys.exit(1)
+            return False
 
         # Format military points and ship count
         military_points_str = (f'{player_military_points:,}').replace(',', '.').ljust(15)
@@ -96,7 +96,6 @@ def main():
 
     # Finalize the payload string
     new_players_str += '\n```'
-    print(new_players_str)
 
     # Update timestamps.json
     logging.info(f'Updating {data_dir}/{server}_{community}_timestamp.json')
@@ -104,6 +103,8 @@ def main():
         json.dump(new_ts, timestamp_file)
 
     logging.info('Done !\n')
+
+    return new_players_str
 
 
 if __name__ == '__main__':
