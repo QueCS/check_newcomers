@@ -4,7 +4,6 @@ import tomllib
 import logging
 import api_parsing as ap
 import json
-import sys
 import datetime
 import time
 
