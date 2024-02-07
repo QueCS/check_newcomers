@@ -1,5 +1,1 @@
-.venv
 src/__pycache__
-logs
-data
-config.toml

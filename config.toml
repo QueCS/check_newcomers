@@ -1,0 +1,9 @@
+[CHECK_NEWCOMERS]
+log_dir = '../logs'
+log_lvl = 'logging.INFO'
+server = ''
+community = ''
+data_dir = '../data'
+
+[DISCORD_BOT]
+webhook = ''
