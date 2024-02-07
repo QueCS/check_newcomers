@@ -9,7 +9,12 @@ os.chdir(f'{os.path.dirname(__file__)}')
 
 
 def main():
-    ...
+    server, community, webhook = get_arguments()
+    rename_files(server, community)
+    update_config_file(server, community, webhook)
+    api = get_highscore_api(server, community, 1, 3)
+    player_list = get_player_ids(api)
+    update_players_file(player_list)
 
 
 def get_arguments():
@@ -20,8 +25,7 @@ def get_arguments():
     server = parser.parse_args().server
     community = parser.parse_args().community
     webhook = parser.parse_args().webhook
-    log = parser.parse_args().log
-    return server, community, webhook, log
+    return server, community, webhook
 
 
 def rename_files(server, community):

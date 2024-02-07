@@ -2,53 +2,53 @@
 
 Python script to check new player arrivals on OGame servers through [OGame public APIs](https://forum.origin.ogame.gameforge.com/forum/thread/44-ogame-api/).
 
-## Directories details
-
-The `data` directory should contain automatically generated .json files keeping track of last API update timestamp and known players.\
-The `logs` directory should countain an automatically generated .log text file.\
-The `src` directory should contain all scripts.
-
-## Configs details
-
-The `config_example.toml` file shows how your personal and private `config.toml` file should look like.\
-The `config.toml` file of appropriate inner format is mandatory for the scripts to run.
-
-## Proposed directory structure
-
-check_newcomers\
-├─ data\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ universe_community_players.json\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ universe_community_timestamp.json\
-├─ logs\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ check_newcomers.log\
-├─ src\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ check_newcomers.py\
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ api_parsing.py\
-├─ .gitignore\
-├─ config_example.toml\
-├─ config.toml\
-├─ LICENSE.md\
-└─ README.md
 
 ## Getting started
 
-Clone the repository at the desired location.\
-`git clone https://github.com/QueCS/check_newcomers.git`
+Clone the repository at the desired location :
+```bash
+git clone https://github.com/QueCS/check_newcomers.git
+```
+\
+Hop into it :
+```bash
+cd check_newcomers
+```
+\
+Set the appropriate python virtual environment used in later steps :
+```bash
+python3 -m venv .venv
+```
+\
+Install necessary dependencies in the virtual environment ([toml](https://pypi.org/project/toml/), [dhooks](https://pypi.org/project/dhooks/)) :
+```bash
+.venv/bin/pip3 install toml dhooks
+```
+\
+Run the bundled set up script in the virtual environment using the desired arguments.\
+`-s or --server` followed by the ID of the OGame server of interest (a list of currently online server can be found [here](https://lobby.ogame.gameforge.com/api/servers)).\
+`-c or --community` followed by the ID of the OGame community of interest.\
+`-w or --webhook` followed by the URL of the webhook to link the bot to (more information on webhooks [here](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)).
 
-Hop into it.\
-`cd check_newcomers`
+For example to configure the bot to check the French server Wasat (123) and send data to the webhook "whatever_url" run :
+```bash
+.venv/bin/python3 setup.py -s '123' -c 'fr' -w 'whatever_url'
+```
+\
+Finally, launch the bot in the virtual environment :
+```bash
+.venv/bin/python3 discord_bot.py &
+```
+\
+Note that in most cases, exiting the current terminal will kill the execution of the bot unless you detach it from the current shell.\
+To avoid that you can [disown](https://linuxcommand.org/lc3_man_pages/disownh.html) it (among other methods) :
+```bash
+$ jobs
+[1]+  6392 Running          .venv/bin/python3 discord_bot.py &
 
-Copy `config_example.toml` as `config.toml`.\
-`cp config_example.toml config.toml`
+$ disown 6392
+```
 
-Create `data` and `logs` directories at the desired locations.\
-You can simply create them in the current directory.\
-`mkdir data logs`
-
-Modify `config.toml` in order to match your setup.
-
-Run the script.\
-`python3 src/check_newcomers.py`
 
 ## Disclaimer
 
