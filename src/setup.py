@@ -31,7 +31,7 @@ def get_arguments():
 def rename_files(server, community):
     os.rename('../data/server_community_players.json', f'../data/{server}_{community}_players.json')
     os.rename('../data/server_community_timestamp.json', f'../data/{server}_{community}_timestamp.json')
-    os.rename('../logs/server_community_check_newcomers.py', f'../logs/{server}_{community}_check_newcomers.py')
+    os.rename('../logs/server_community_check_newcomers.log', f'../logs/{server}_{community}_check_newcomers.log')
 
 
 def update_config_file(server, community, webhook):

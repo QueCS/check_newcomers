@@ -34,12 +34,12 @@ Run the bundled set up script in the virtual environment using the desired argum
 
 For example to configure the bot to check the French server Wasat (123) run:
 ```bash
-.venv/bin/python3 setup.py -s '123' -c 'fr' -w 'secret_webhook_url'
+.venv/bin/python3 src/setup.py -s '123' -c 'fr' -w 'secret_webhook_url'
 ```
 \
 Finally, launch the bot in the virtual environment:
 ```bash
-.venv/bin/python3 discord_bot.py &
+.venv/bin/python3 src/discord_bot.py &
 ```
 \
 Note that in most cases, exiting the current terminal will kill the execution of the bot.\
