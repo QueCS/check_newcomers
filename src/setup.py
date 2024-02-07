@@ -14,7 +14,7 @@ def main():
     update_config_file(server, community, webhook)
     api = get_highscore_api(server, community, 1, 3)
     player_list = get_player_ids(api)
-    update_players_file(player_list)
+    update_players_file(server, community, player_list)
 
 
 def get_arguments():
@@ -117,8 +117,8 @@ def get_player_ids(xml_tree):
     return ids
 
 
-def update_players_file(player_list):
-    with open('../data/server_community_players.json', 'w') as players_file:
+def update_players_file(server, community, player_list):
+    with open(f'../data/{server}_{community}_players.json', 'w') as players_file:
         json.dump(player_list, players_file)
 
 
