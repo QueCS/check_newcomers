@@ -68,11 +68,6 @@ def main():
     # Set up payload string
     update_datetime = datetime.datetime.fromtimestamp(new_ts)
     new_players_str = f'```\n{update_datetime}\n'
-    new_players_str += '\nPlayer                   '
-    new_players_str += 'ID         '
-    new_players_str += 'Pos.         '
-    new_players_str += 'Mili.               '
-    new_players_str += 'Ships     \n'
 
     # Loop through new players fetching data
     for player_id in new_players:
@@ -88,15 +83,11 @@ def main():
             return False
 
         # Format military points and ship count
-        military_points_str = (f'{player_military_points:,}').replace(',', '.').ljust(15)
+        military_points_str = (f'{player_military_points:,}').replace(',', '.')
         military_ships_str = (f'{player_ship_count:,}').replace(',', '.')
 
         # Append new data to payload string
-        new_players_str += f'\n{player_name.ljust(20)}     '
-        new_players_str += f'{player_id}     '
-        new_players_str += f'{player_home.ljust(8)}     '
-        new_players_str += f'{military_points_str}     '
-        new_players_str += f'{military_ships_str}'
+        new_players_str += f'\n{player_name} ({player_id}, {player_home}) {military_points_str} ({military_ships_str})\n'
 
         # Update players.json with processed player
         logging.info(f'Adding entry to {data_dir}/{server}_{community}_players.json')
@@ -108,7 +99,7 @@ def main():
         time.sleep(0.5)
 
     # Finalize the payload string
-    new_players_str += '\n```'
+    new_players_str += '```'
 
     # Update timestamps.json
     logging.info(f'Updating {data_dir}/{server}_{community}_timestamp.json')
