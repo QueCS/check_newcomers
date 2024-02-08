@@ -4,6 +4,7 @@ import toml
 import requests
 import xml.etree.ElementTree as et
 import json
+import shutil
 
 os.chdir(f'{os.path.dirname(__file__)}')
 
@@ -15,6 +16,7 @@ def main():
     api = get_highscore_api(server, community, 1, 3)
     player_list = get_player_ids(api)
     update_players_file(server, community, player_list)
+    finalize_directory(server, community)
 
 
 def get_arguments():
@@ -120,6 +122,12 @@ def get_player_ids(xml_tree):
 def update_players_file(server, community, player_list):
     with open(f'../data/{server}_{community}_players.json', 'w') as players_file:
         json.dump(player_list, players_file)
+
+
+def finalize_directory(server, community):
+    os.remove('../.gitignore')
+    shutil.rmtree('../.git')
+    os.rename('../../check_newcomers', f'../../{server}_{community}_check_newcomers')
 
 
 if __name__ == '__main__':
