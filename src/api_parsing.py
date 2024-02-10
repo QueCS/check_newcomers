@@ -4,6 +4,7 @@ import tomllib
 import logging
 import requests
 import xml.etree.ElementTree as et
+import time
 
 # Set the working directory to this script location
 os.chdir(f'{os.path.dirname(__file__)}')
@@ -39,7 +40,7 @@ def main():
     ...
 
 
-def get_highscore_api(server, community, category, type):
+def get_highscore_api(server, community, category, type, max_retries=70, retry_sleep=60):
     """
     Retrieve data from OGame highscore API.
 
@@ -66,6 +67,10 @@ def get_highscore_api(server, community, category, type):
             - '10': Lifeforms technology highscore
             - '11': Lifeforms discovery highscore
 
+        max_retries (int): The number of time the function will try to reach the API.
+
+        retry_sleep (int): The amount of time (in seconds) the function will wait before trying to reach the API again after a previous failure.
+
     Raises:
         requests.exceptions.RequestException: If there is an error during the request.
 
@@ -78,15 +83,22 @@ def get_highscore_api(server, community, category, type):
 
     api_url = f'https://s{server}-{community}.ogame.gameforge.com/api/highscore.xml?category={category}&type={type}'
 
-    try:
-        response = requests.get(api_url)
-        if response.status_code == 200:
-            xml_tree = et.fromstring(response.content)
-            return xml_tree
-        response.raise_for_status()
-    except requests.exceptions.RequestException as exception:
-        logging.warning(f'Calling get_highscore_api(): {exception}')
-        return None
+    retries = 0
+
+    while retries < max_retries:
+        try:
+            response = requests.get(api_url)
+            if response.status_code == 200:
+                xml_tree = et.fromstring(response.content)
+                return xml_tree
+            response.raise_for_status()
+        except requests.exceptions.RequestException as exception:
+            logging.warning(f'Calling get_highscore_api(): {exception}')
+            logging.warning(f'Waiting {retry_sleep}s and trying again')
+        time.sleep(retry_sleep)
+        retries += 1
+    logging.warning(f'Reached maximum retry limit ({max_retries}). Unable to obtain XML tree.')
+    return None
 
 
 def get_player_ids(xml_tree):
@@ -118,7 +130,7 @@ def get_player_ids(xml_tree):
     return ids
 
 
-def get_player_api(server, community, player_id):
+def get_player_api(server, community, player_id, max_retries=70, retry_sleep=60):
     """
     Retrieve data from OGame player API.
 
@@ -128,6 +140,10 @@ def get_player_api(server, community, player_id):
         community (str): The OGame community abbreviation (e.g., 'en', 'us').
 
         player_id (str): The ID of the player of interest (e.g., '142515', '108794').
+
+        max_retries (int): The number of time the function will try to reach the API.
+
+        retry_sleep (int): The amount of time (in seconds) the function will wait before trying to reach the API again after a previous failure.
 
     Raises:
         requests.exceptions.RequestException: If there is an error during the request.
@@ -141,15 +157,22 @@ def get_player_api(server, community, player_id):
 
     api_url = f'https://s{server}-{community}.ogame.gameforge.com/api/playerData.xml?id={player_id}'
 
-    try:
-        response = requests.get(api_url)
-        if response.status_code == 200:
-            xml_tree = et.fromstring(response.content)
-            return xml_tree
-        response.raise_for_status()
-    except requests.exceptions.RequestException as exception:
-        logging.warning(f'Calling get_player_api(): {exception}')
-        return None
+    retries = 0
+
+    while retries < max_retries:
+        try:
+            response = requests.get(api_url)
+            if response.status_code == 200:
+                xml_tree = et.fromstring(response.content)
+                return xml_tree
+            response.raise_for_status()
+        except requests.exceptions.RequestException as exception:
+            logging.warning(f'Calling get_player_api(): {exception}')
+            logging.warning(f'Waiting {retry_sleep}s and trying again')
+        time.sleep(retry_sleep)
+        retries += 1
+    logging.warning(f'Reached maximum retry limit ({max_retries}). Unable to obtain XML tree.')
+    return None
 
 
 def get_player_name(xml_tree):
